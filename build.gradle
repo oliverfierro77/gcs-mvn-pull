@@ -5,15 +5,28 @@ plugins {
 }
 
 group = 'com.pudulabs'
-version = '0.0.1-RELEASE'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+ext {
+	version_publisher = '0.0.1-SNAPSHOT'
+}
 
 repositories {
 	mavenCentral()
 	maven {
-		url "gcs://my-mvn-repository/maven/release"
+		//GCP
+		//url "gcs://my-mvn-repository/maven/release"
 		//url "gcs://my-mvn-repository/maven/snapshot"
+
+		//S3 Amazon Web Services
+		url System.getenv('s3ArtifactUrl')
+		credentials(AwsCredentials) {
+			accessKey = System.getenv('awsAccessKeyId')
+			secretKey = System.getenv('awsSecretAccessKey')
+		}
 	}
+
 }
 
 dependencies {
@@ -21,7 +34,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	compile group: 'com.pudulabs', name: 'publisher', version: "${version}"
+	compile group: 'com.pudulabs', name: 'publisher', version: "${version_publisher}"
 }
 
 test {
